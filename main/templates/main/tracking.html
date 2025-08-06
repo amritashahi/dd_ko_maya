@@ -1,0 +1,47 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Tracking Order #{{ order.id }}</h2>
+    
+    <!-- Status Summary -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Current Status</h5>
+            <span class="badge bg-{% if order.delivery_status == 'DELIVERED' %}success{% else %}info{% endif %}">
+                {{ order.get_delivery_status_display }}
+            </span>
+            {% if order.estimated_delivery %}
+            <p class="mt-2">Estimated Delivery: {{ order.estimated_delivery|date:"M d, Y" }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Tracking Timeline -->
+    <h4>Delivery Updates</h4>
+    <div class="timeline">
+        {% for update in updates %}
+        <div class="timeline-event {% if forloop.first %}latest{% endif %}">
+            <div class="event-time">{{ update.timestamp|date:"M d, Y H:i" }}</div>
+            <div class="event-status">{{ update.status }}</div>
+            {% if update.location %}<div class="event-location">📍 {{ update.location }}</div>{% endif %}
+            {% if update.notes %}<div class="event-notes">{{ update.notes }}</div>{% endif %}
+        </div>
+        {% empty %}
+        <div class="alert alert-info">No tracking updates yet.</div>
+        {% endfor %}
+    </div>
+
+    <!-- Support Section -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5>Need Help?</h5>
+            <p>Contact our support team:</p>
+            <ul
+                <li>Phone: +977-9860111275</li>
+                <li>Email: amyshahi538@gmail.com</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

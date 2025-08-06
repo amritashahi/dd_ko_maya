@@ -1,0 +1,98 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="delivery-timeline">
+    <h3>Your Order Journey</h3>
+    <div class="timeline-steps">
+        <div class="step {% if order.delivery_status == 'PROCESSING' %}active{% endif %}">
+            <div class="step-icon">1</div>
+            <div class="step-content">
+                <h5>Order Received</h5>
+                <p>{{ order.created_at|date:"M d, Y H:i" }}</p>
+            </div>
+        </div>
+        
+        <div class="step {% if order.delivery_status == 'PREPARING' %}active{% endif %}">
+            <div class="step-icon">2</div>
+            <div class="step-content">
+                <h5>Preparing Your Items</h5>
+                {% if order.delivery_status == 'PREPARING' %}
+                <p>Started on {{ order.updated_at|date:"M d" }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="step {% if order.delivery_status == 'DISPATCHED' %}active{% endif %}">
+            <div class="step-icon">3</div>
+            <div class="step-content">
+                <h5>Dispatched</h5>
+                {% if order.delivery_status == 'DISPATCHED' %}
+                <p>Estimated delivery: {{ order.estimated_delivery|date:"M d, Y" }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="step {% if order.delivery_status == 'DELIVERED' %}active{% endif %}">
+            <div class="step-icon">4</div>
+            <div class="step-content">
+                <h5>Delivered</h5>
+                {% if order.delivery_status == 'DELIVERED' %}
+                <p>{{ order.actual_delivery|date:"M d, Y" }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<style>
+    .delivery-timeline {
+        margin: 30px 0;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 10px;
+    }
+    .timeline-steps {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
+    .timeline-steps::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: #ddd;
+        z-index: 1;
+    }
+    .step {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        width: 24%;
+    }
+    .step-icon {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 10px;
+        background: #ddd;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+    .step.active .step-icon {
+        background: #d63384;
+    }
+    .step-content {
+        background: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+</style>

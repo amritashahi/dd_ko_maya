@@ -1,0 +1,68 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Your Cart</h2>
+    
+    {% if cart.items.all %}
+        <div class="row mt-4">
+            <div class="col-md-8">
+                {% for item in cart.items.all %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="{{ item.product.image.url }}" class="img-fluid" alt="{{ item.product.name }}">
+                            </div>
+                            <div class="col-md-4">
+                                <h5>{{ item.product.name }}</h5>
+                            </div>
+                            <div class="col-md-2">
+                                <p>Rs. {{ item.product.price }}</p>
+                            </div>
+                            <div class="col-md-2">
+                                <form method="post" action="{% url 'update_cart_item' item.id %}">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary mt-2">Update</button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <p>Rs. {{ item.total_price }}</p>
+                                <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Order Summary</h5>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <span>Subtotal ({{ cart.items.count }} items):</span>
+                            <span>Rs. {{ cart.total_price }}</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Total:</span>
+                            <span>Rs. {{ cart.total_price }}</span>
+                        </div>
+                        <a href="{% url 'checkout' %}" class="btn btn-primary w-100 mt-3">
+                            Proceed to Checkout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info mt-4">
+            Your cart is empty. <a href="{% url 'home' %}">Continue shopping</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

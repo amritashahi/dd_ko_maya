@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}DD को माया{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<header style="background-color: #ffb6c1;" class="p-4 text-center">
+    <h1 class="text-white fw-bold">DD को माया - Period Box Subscription</h1>
+</header>
+
+<div class="container-fluid p-0">
+    {% block content %}{% endblock %}
+
+<a href="{% url 'order_history' %}" class="nav-link">
+    <i class="fas fa-history"></i> My Orders
+</a>
+
+
+<footer style="background-color: #ffb6c1;" class="text-white text-center p-3 mt-0">
+    &copy; 2025 DD को माया
+</footer>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

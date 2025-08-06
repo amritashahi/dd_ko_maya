@@ -1,0 +1,156 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* Make body and html full height for full screen video */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* Full screen fixed video background */
+  #bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Container for content to be centered */
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertical center */
+    align-items: center;    /* horizontal center */
+    color: #cc0066; /* pinkish color */
+    text-align: center;
+    padding: 0 20px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(255, 182, 193, 0.8);
+  }
+
+  .explore-text {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    color: #800040;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .explore-btn {
+    background-color: #ff66a3;
+    color: white;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 15px #ff66a3aa;
+  }
+
+  .explore-btn:hover {
+    background-color: #e60073;
+    box-shadow: 0 0 25px #e60073cc;
+  }
+
+  .auth-buttons .btn {
+  transition: all 0.3s ease;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.auth-buttons .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+@media (max-width: 768px) {
+  .auth-buttons {
+    top: 10px;
+    right: 10px;
+  }
+  .auth-buttons .btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+}
+</style>
+
+<!-- Full screen background video -->
+<video id="bg-video" autoplay loop muted playsinline>
+  <source src="{% static 'videos/braiding.mp4' %}" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
+<!-- Content overlaid on video -->
+<div class="hero-content">
+  <h1>Welcome to DD को माया</h1>
+ <!-- Auth Buttons (Top-Right) -->
+ <!-- Contact Info Panel - Right Side -->
+<div class="contact-panel" style="
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: rgba(255, 182, 193, 0.9);
+    padding: 15px;
+    border-radius: 10px;
+    z-index: 100;
+    box-shadow: 0 0 15px rgba(204, 0, 102, 0.3);
+">
+    <h5 style="margin-bottom: 10px; color: #800040;">Contact Us</h5>
+    <div style="display: flex; align-items: center; margin-bottom: 8px;">
+        <i class="fas fa-envelope" style="margin-right: 8px; color: #e75480;"></i>
+        <span>amyshahi538@gmail.com</span>
+    </div>
+    <div style="display: flex; align-items: center;">
+        <i class="fas fa-phone" style="margin-right: 8px; color: #e75480;"></i>
+        <span>+977 9860111275</span>
+    </div>
+</div>
+  <div class="auth-buttons" style="position: absolute; top: 20px; right: 20px;">
+    {% if user.is_authenticated %}
+      <form action="{% url 'logout' %}" method="post" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm" style="background-color: #e75480; color: white; border: none;">
+          Logout
+        </button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-sm" style="background-color: #e75480; color: white;">Login</a>
+      <a href="{% url 'signup' %}?next={{ request.path }}" class="btn btn-sm ms-2" style="background-color: #ffb6c1; color: white;">Sign Up</a>
+    {% endif %}
+  </div>
+  
+  <div class="explore-text">
+    {% if user.is_authenticated %}
+      <p>Explore our combos below:</p>
+      <a href="{% url 'essence_combo' %}" class="explore-btn">Explore Essence Combo</a>
+      <a href="{% url 'relief_combo' %}" class="explore-btn">Explore Relief Combo</a>
+      <a href="{% url 'shanti_combo' %}" class="explore-btn">Explore Shanti Combo</a>
+    {% else %}
+      <p>Please login or sign up to explore our combos</p>
+      <div style="margin-top: 20px;">
+        <a href="{% url 'login' %}?next={{ request.path }}" class="explore-btn">Login</a>
+        <a href="{% url 'signup' %}?next={{ request.path }}" class="explore-btn" style="background-color: #ffb6c1;">Sign Up</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

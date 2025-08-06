@@ -1,0 +1,85 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Your Order History</h2>
+    
+    {% if orders %}
+    <div class="order-list">
+        {% for order in orders %}
+        <div class="order-card">
+            <div class="order-header">
+                <h4>Order #{{ order.id }}</h4>
+                <span class="badge 
+        {% if order.overall_status == 'Delivered' %}bg-success
+        {% elif order.overall_status == 'Cancelled' %}bg-danger
+        {% else %}bg-warning{% endif %}">
+        {{ order.overall_status }}
+    </span>
+            </div>
+            
+            <div class="order-details">
+                <p><strong>Date:</strong> {{ order.created_at|date:"M d, Y" }}</p>
+                <p><strong>Total:</strong> Rs. {{ order.total_price }}</p>
+                <p><strong>Items:</strong></p>
+                <ul>
+                    {% for item in order.items.all %}
+                    <li>{{ item.product.name }} × {{ item.quantity }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="order-actions">
+                <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-primary">
+                    View Details
+                </a>
+
+                {% if order.delivery_status != 'DELIVERED' %}
+                <a href="{% url 'track_order' order.id %}" class="btn btn-sm btn-outline-primary">
+    <i class="fas fa-truck"></i> Track Order
+</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        You haven't placed any orders yet.
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .order-list {
+        margin-top: 30px;
+    }
+    .order-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background: white;
+    }
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .order-details {
+        margin-bottom: 15px;
+    }
+    .order-actions {
+        display: flex;
+        gap: 10px;
+    }
+    .badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+</style>
+{% endblock %}

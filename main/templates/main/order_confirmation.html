@@ -1,0 +1,42 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="confirmation-container">
+    <h1>Order Confirmed!</h1>
+    
+    <div class="order-details">
+        <p><strong>Order ID:</strong> #{{ order.id }}</p>
+        <p><strong>Total Paid:</strong> Rs. {{ order.total_price }}</p>
+        
+        <h3>Items:</h3>
+        <ul class="item-list">
+            {% for item in order.items.all %}
+            <li>
+                {% if item.product %}
+                    {{ item.product.name }} × {{ item.quantity }} - Rs. {{ item.price }}
+                {% elif item.service %}
+                    {{ item.service.name }} ({{ item.duration }}) × {{ item.days }} days - Rs. {{ item.price }}
+                {% else %}
+                    <!-- Fallback for items without product or service -->
+                    Item × {{ item.quantity|default:1 }} - Rs. {{ item.price }}
+                {% endif %}
+            </li>
+            {% empty %}
+            <li class="text-muted">No items in this order</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="combo-message">
+        {% if order.combo_type == 'Essence' %}
+            <p>Your Essence Combo will help you reconnect with your natural rhythm.</p>
+        {% elif order.combo_type == 'Relief' %}
+            <p>Your Relief Combo will help soothe menstrual discomfort.</p>
+        {% elif order.combo_type == 'Shanti' %}
+            <p>Your Shanti Combo will bring peace and balance to your cycle.</p>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'home' %}" class="btn btn-primary">Return Home</a>
+</div>
+{% endblock %}

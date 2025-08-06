@@ -1,0 +1,83 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <a href="{% url 'order_history' %}" class="btn btn-outline-secondary mb-4">
+        &larr; Back to Orders
+    </a>
+    
+    <h2>Order #{{ order.id }}</h2>
+    <p class="text-muted">Placed on {{ order.created_at|date:"M d, Y H:i" }}</p>
+    <p class="text-muted">Combo Type: {{ order.combo_type }}</p>
+    
+    {% include 'main/delivery_timeline.html' %}
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5>Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>× {{ item.quantity }}</td>
+                            <td class="text-end">Rs. {{ item.price }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="table-active">
+                            <th colspan="2">Total</th>
+                            <th class="text-end">Rs. {{ order.total_price }}</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5>Delivery & Payment</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Delivery Status:</strong> 
+                        <span class="badge 
+                            {% if order.delivery_status == 'DELIVERED' %}bg-success
+                            {% elif order.delivery_status == 'CANCELLED' %}bg-danger
+                            {% else %}bg-info{% endif %}">
+                            {{ order.get_delivery_status_display }}
+                        </span>
+                    </p>
+                    
+                    {% if order.estimated_delivery %}
+                    <p><strong>Estimated Delivery:</strong> 
+                        {{ order.estimated_delivery|date:"M d, Y" }}
+                    </p>
+                    {% endif %}
+                    
+                    <p><strong>Payment Method:</strong> 
+                        {{ order.get_payment_method_display }}
+                    </p>
+                    
+                    <p><strong>Payment Status:</strong> 
+                        <span class="badge 
+                            {% if order.payment_status == 'COMPLETED' %}bg-success
+                            {% elif order.payment_status == 'FAILED' %}bg-danger
+                            {% else %}bg-warning{% endif %}">
+                            {{ order.get_payment_status_display }}
+                        </span>
+                    </p>
+                    
+                    {% if order.bank_receipt %}
+                    <p><strong>Bank Receipt:</strong> 
+                        <a href="{{ order.bank_receipt.url }}" target="_blank">View Receipt</a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

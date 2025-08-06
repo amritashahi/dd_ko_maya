@@ -1,0 +1,24 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Delivery Information</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.delivery_contact_name.label_tag }}
+            {{ form.delivery_contact_name }}
+        </div>
+        <div class="mb-3">
+            {{ form.delivery_contact_phone.label_tag }}
+            {{ form.delivery_contact_phone }}
+            <small class="text-muted">Our delivery team will contact this number</small>
+        </div>
+        <div class="mb-3">
+            {{ form.special_delivery_notes.label_tag }}
+            {{ form.special_delivery_notes }}
+        </div>
+        <button type="submit" class="btn btn-primary">Continue to Payment</button>
+    </form>
+</div>
+{% endblock %}

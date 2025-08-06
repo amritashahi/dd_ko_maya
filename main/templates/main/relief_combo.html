@@ -1,0 +1,297 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .combo-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #fff9fb;
+        border-radius: 15px;
+    }
+    .product-card {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .product-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 15px;
+    }
+    .qty-control {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+    }
+    .qty-btn {
+        width: 30px;
+        height: 30px;
+        background: #d63384;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .massage-options {
+        display: flex;
+        gap: 30px;
+        margin: 20px 0;
+    }
+    .massage-option {
+        text-align: center;
+        cursor: pointer;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    .massage-option:hover {
+        border-color: #d63384;
+    }
+    .massage-option img {
+        width: 150px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    .no-massage {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 150px;
+        height: 120px;
+    }
+    .massage-icon {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    #days-selection {
+        margin-top: 15px;
+        display: none;
+    }
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background: #d63384;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .submit-btn:hover {
+        background: #b52d6f;
+    }
+    .submit-btn:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+    }
+</style>
+
+<div class="combo-container">
+    <h2 style="text-align:center; color:#d63384;">Relief Combo</h2>
+
+    {% if message %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'relief_combo' %}" id="order-form">
+        {% csrf_token %}
+        <input type="hidden" name="price" value="4.00">
+        <input type="hidden" name="massage_price" id="massage_price" value="0">
+        <input type="hidden" name="yoga_price" id="yoga_price" value="0">
+
+        <!-- Products Section -->
+        {% for product in products %}
+        <div class="product-card">
+            <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+            <div>
+                <h5>{{ product.name }}</h5>
+                <p>Rs. {{ product.price }}</p>
+            </div>
+            <div class="qty-control">
+                <button type="button" class="qty-btn" onclick="changeQty('{{ product.id }}', -1)">-</button>
+                <input type="text" id="qty_{{ product.id }}" name="qty_{{ product.id }}" 
+                       value="0" style="width: 40px; text-align: center;" readonly>
+                <button type="button" class="qty-btn" onclick="changeQty('{{ product.id }}', 1)">+</button>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Massage Service Section -->
+        <div class="massage-service">
+            <h3>Massage Service</h3>
+            
+            <div class="massage-options">
+                <!-- No Massage Option -->
+                <div class="massage-option no-massage" onclick="selectMassage('none')">
+                    <div class="massage-icon">✖</div>
+                    <p>No Massage</p>
+                </div>
+                
+                <!-- 30 Minutes Option -->
+                <div class="massage-option" onclick="selectMassage('30 minutes')">
+                    <img src="/media/products/msg.jpg" alt="30 Minute Massage">
+                    <p style="margin-top: 10px; font-weight: bold;">30 minutes</p>
+                    <p>Rs. 800/day</p>
+                </div>
+                
+                <!-- 1 Hour Option -->
+                <div class="massage-option" onclick="selectMassage('1 hour')">
+                    <img src="/media/products/MSGG.jpg" alt="1 Hour Massage">
+                    <p style="margin-top: 10px; font-weight: bold;">1 hour</p>
+                    <p>Rs. 1500/day</p>
+                </div>
+            </div>
+
+            <!-- Days Selection -->
+            <div id="days-selection">
+                <label>Days:</label>
+                <select name="massage_days" id="massage_days" required>
+                    <option value="">-- Select --</option>
+                    <option value="3">3 Days</option>
+                    <option value="7">7 Days</option>
+                </select>
+            </div>
+            
+            <input type="hidden" name="massage_type" id="massage_type" value="none">
+        </div>
+
+        <!-- Payment Method -->
+        <div class="payment-method">
+            <h3>Payment Method</h3>
+            <select name="payment_method" id="payment_method" required>
+                <option value="">-- Select Payment Method --</option>
+                <option value="COD">Cash on Delivery (COD)</option>
+                <option value="BANK_NIC">Bank Transfer (NIC Asia)</option>
+            </select>
+        </div>
+        
+        <!-- Order Summary -->
+        <div style="text-align: right; font-size: 18px; margin: 20px 0;">
+            <strong>Total: Rs. <span id="total">0.00</span></strong>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">Place Order</button>
+    </form>
+</div>
+
+<script>
+    const productPrices = {
+        {% for product in products %}
+        "{{ product.id }}": {{ product.price }},
+        {% endfor %}
+    };
+
+    const massageRates = {
+        "30 minutes": 800,
+        "1 hour": 1500
+    };
+
+    function changeQty(id, delta) {
+        const input = document.getElementById(`qty_${id}`);
+        let value = parseInt(input.value) || 0;
+        value = Math.max(0, value + delta);
+        input.value = value;
+        updateTotal();
+        validateForm();
+    }
+
+    function selectMassage(type) {
+        const massageType = document.getElementById('massage_type');
+        const daysSelection = document.getElementById('days-selection');
+        
+        massageType.value = type;
+        
+        if (type === 'none') {
+            daysSelection.style.display = 'none';
+            document.getElementById('massage_days').value = '';
+        } else {
+            daysSelection.style.display = 'block';
+        }
+        
+        updateTotal();
+        validateForm();
+    }
+
+    function updateTotal() {
+        let total = 0;
+
+        // Calculate products total
+        for (const id in productPrices) {
+            const qty = parseInt(document.getElementById(`qty_${id}`).value) || 0;
+            total += qty * productPrices[id];
+        }
+
+        // Add massage cost
+        const massageType = document.getElementById('massage_type').value;
+        const days = parseInt(document.getElementById('massage_days').value) || 0;
+        
+        if (massageType && massageType !== 'none' && days > 0) {
+            total += massageRates[massageType] * days;
+        }
+
+        document.getElementById('total').textContent = total.toFixed(2);
+    }
+
+    function validateForm() {
+        const submitBtn = document.getElementById('submit-btn');
+        let isValid = true;
+        
+        // Check if at least one product is selected
+        let hasProducts = false;
+        for (const id in productPrices) {
+            if (parseInt(document.getElementById(`qty_${id}`).value) > 0) {
+                hasProducts = true;
+                break;
+            }
+        }
+        
+        if (!hasProducts) {
+            isValid = false;
+        }
+        
+        // Check massage selection if not 'none'
+        const massageType = document.getElementById('massage_type').value;
+        if (massageType !== 'none') {
+            const days = parseInt(document.getElementById('massage_days').value);
+            if (!days || days <= 0) {
+                isValid = false;
+            }
+        }
+        
+        // Check payment method
+        const paymentMethod = document.getElementById('payment_method').value;
+        if (!paymentMethod) {
+            isValid = false;
+        }
+        
+        submitBtn.disabled = !isValid;
+    }
+
+    // Initialize event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        updateTotal();
+        validateForm();
+        
+        // Add event listeners for form validation
+        document.getElementById('massage_days').addEventListener('change', validateForm);
+        document.getElementById('payment_method').addEventListener('change', validateForm);
+    });
+</script>
+{% endblock %}
