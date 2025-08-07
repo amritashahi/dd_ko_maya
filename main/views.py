@@ -27,6 +27,8 @@ import pytesseract  # For OCR (optional)
 import logging
 from .models import ComboOrder, TrackingUpdate
 from .forms import OrderContactForm, UserProfileForm 
+from django.http import HttpResponse
+import traceback
 
 
 
@@ -65,41 +67,54 @@ def create_test_order(request):
     
     return render(request, 'main/home.html')
 def signup(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            next_page = request.GET.get('next', 'home')  # Get next parameter or default to 'home'
-            return redirect(next_page)
+    try:
+        if request.method == 'POST':
+            form = UserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                login(request, user)
+                next_page = request.GET.get('next', 'home')  # Redirect to next or home
+                return redirect(next_page)
+            else:
+                # Print form errors to console for debugging
+                print("Form errors:", form.errors)
+                messages.error(request, "Please correct the errors below")
         else:
-            # Print form errors to console for debugging
-            print("Form errors:", form.errors)
-            messages.error(request, "Please correct the errors below")
-    else:
-        form = UserCreationForm()
-    
-    return render(request, 'auth/signup.html', {
-        'form': form,
-        'next': request.GET.get('next', '')  # Pass next parameter to template
-    })
+            form = UserCreationForm()
+        
+        return render(request, 'auth/signup.html', {
+            'form': form,
+            'next': request.GET.get('next', '')  # Pass next parameter to template
+        })
+
+    except Exception as e:
+        print("❌ SIGNUP VIEW ERROR:", e)
+        print(traceback.format_exc())
+        return HttpResponse("An error occurred. Check logs.", status=500)
 
 def custom_login(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
+    try:
+        if request.user.is_authenticated:
             return redirect('home')
+        
+        if request.method == 'POST':
+            form = AuthenticationForm(request, data=request.POST)
+            if form.is_valid():
+                user = form.get_user()
+                login(request, user)
+                return redirect('home')
+            else:
+                messages.error(request, "Invalid username or password")
         else:
-            messages.error(request, "Invalid username or password")
-    else:
-        form = AuthenticationForm()
-    
-    return render(request, 'main/templates/auth/login.html', {'form': form})
+            form = AuthenticationForm()
+        
+        return render(request, 'auth/login.html', {'form': form})
+
+    except Exception as e:
+        print("❌ LOGIN VIEW ERROR:", e)
+        print(traceback.format_exc())
+        return HttpResponse("An error occurred. Check logs.", status=500)
+
 
 def handle_combo_order(request, combo_type):
     if request.method == 'POST':
