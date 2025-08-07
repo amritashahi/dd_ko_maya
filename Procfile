@@ -1,1 +1,1 @@
-web: gunicorn dd_ko_maya.wsgi
+web: gunicorn config.wsgi
