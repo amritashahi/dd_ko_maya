@@ -19,10 +19,6 @@ class Product(models.Model):
     ))
     combo_type = models.CharField(max_length=20, blank=True)  # Add this line
     available = models.BooleanField(default=True)
-    def get_image_url(self):
-        if self.image:
-            return f'/static/products/{self.image}'
-        return ''
     
 class Service(models.Model):
     name = models.CharField(max_length=100)
