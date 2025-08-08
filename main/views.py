@@ -306,8 +306,8 @@ def relief_combo_view(request):
     )
 
     MASSAGE_SERVICES = {
-        '30 minutes': {'price': Decimal('800'), 'image': '/media/products/msg.jpg'},
-        '1 hour': {'price': Decimal('1500'), 'image': '/media/products/MSGG.jpg'}
+        '30 minutes': {'price': Decimal('800'), 'image': '/products/msg.jpg'},
+        '1 hour': {'price': Decimal('1500'), 'image': '/products/MSGG.jpg'}
     }
 
     if request.method == "POST":
@@ -404,14 +404,14 @@ def shanti_combo_view(request):
     # Service options with images
     MASSAGE_OPTIONS = {
         'none': {'price': 0},
-        '30 minutes': {'price': 800, 'image': '/media/products/msg.jpg'},
-        '1 hour': {'price': 1500, 'image': '/media/products/MSGG.jpg'}
+        '30 minutes': {'price': 800, 'image': '/products/msg.jpg'},
+        '1 hour': {'price': 1500, 'image': '/products/MSGG.jpg'}
     }
     
     YOGA_OPTIONS = {
         'none': {'price': 0},
-        'online': {'price': 300, 'image': '/media/products/yoga.jpg'},
-        'physical': {'price': 600, 'image': '/media/products/med.png'}
+        'online': {'price': 300, 'image': '/products/yoga.jpg'},
+        'physical': {'price': 600, 'image': '/products/med.png'}
     }
 
     if request.method == "POST":

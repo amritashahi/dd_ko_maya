@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 from main.views import create_test_order
 from main.views import order_confirmation
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('', views.home, name='home'),
     path('essence-combo/', views.essence_combo_view, name='essence_combo'),
@@ -17,3 +20,5 @@ urlpatterns = [
     path('orders/<int:order_id>/track/', views.track_order, name='track_order'),
    
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

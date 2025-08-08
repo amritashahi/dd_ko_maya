@@ -122,7 +122,7 @@
         <h2>Products</h2>
         {% for product in products %}
         <div class="selection-card">
-            <img src="{{ product.image.url }}" class="selection-image" alt="{{ product.name }}">
+            <img src="{% static product.image %}" class="selection-image" alt="{{ product.name }}">
             <div class="selection-details">
                 <div class="selection-name">{{ product.name }}</div>
                 <div class="selection-price">Rs. {{ product.price }}</div>
@@ -142,7 +142,7 @@
         <div class="selection-card service-massage {% if key == 'none' %}selected{% endif %}" 
              onclick="selectService('massage', '{{ key }}')">
             {% if key != 'none' %}
-            <img src="{{ option.image }}" class="selection-image" alt="Massage {{ key }}">
+            <img src="{% static option.image %}" class="selection-image" alt="Massage {{ key }}">
             {% endif %}
             <div class="selection-details">
                 <div class="selection-name">
@@ -170,7 +170,7 @@
         <div class="selection-card service-yoga {% if key == 'none' %}selected{% endif %}" 
              onclick="selectService('yoga', '{{ key }}')">
             {% if key != 'none' %}
-            <img src="{{ option.image }}" class="selection-image" alt="Yoga {{ key }}">
+            <img src="{% static option.image %}" class="selection-image" alt="Yoga {{ key }}">
             {% endif %}
             <div class="selection-details">
                 <div class="selection-name">

@@ -119,7 +119,7 @@
         <!-- Products Section -->
         {% for product in products %}
         <div class="product-card">
-            <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+            <img src="{% static product.image %}" class="product-img" alt="{{ product.name }}">
             <div>
                 <h5>{{ product.name }}</h5>
                 <p>Rs. {{ product.price }}</p>
@@ -146,14 +146,14 @@
                 
                 <!-- 30 Minutes Option -->
                 <div class="massage-option" onclick="selectMassage('30 minutes')">
-                    <img src="/media/products/msg.jpg" alt="30 Minute Massage">
+                    <img src="/static/products/msg.jpg" alt="30 Minute Massage">
                     <p style="margin-top: 10px; font-weight: bold;">30 minutes</p>
                     <p>Rs. 800/day</p>
                 </div>
                 
                 <!-- 1 Hour Option -->
                 <div class="massage-option" onclick="selectMassage('1 hour')">
-                    <img src="/media/products/MSGG.jpg" alt="1 Hour Massage">
+                    <img src="/static/products/MSGG.jpg" alt="1 Hour Massage">
                     <p style="margin-top: 10px; font-weight: bold;">1 hour</p>
                     <p>Rs. 1500/day</p>
                 </div>
