@@ -22,9 +22,11 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name']
     list_filter = ['category']
     
-    def image_preview(self, obj):
-        return obj.image.url if obj.image else "No Image"
-    image_preview.short_description = 'Image Preview'
+    def display_image(self, obj):
+        if obj.image:
+            return mark_safe(f'<img src="{obj.get_image_url()}" width="150" />')
+        return "No image"
+    display_image.short_description = 'Image Preview'
 
 @admin.register(ReliefCombo)
 class ReliefComboAdmin(admin.ModelAdmin):

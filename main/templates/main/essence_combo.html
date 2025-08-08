@@ -163,7 +163,7 @@
         
         <div class="product-card">
           
-            <img src="{% static product.image %}" class="product-img" alt="{{ product.name }}">
+            <img src="{{ product.get_image_url }}" class="product-img" alt="{{ product.name }}">
             
             
             <div class="product-info">
