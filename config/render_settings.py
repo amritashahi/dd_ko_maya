@@ -1,4 +1,4 @@
-# config/render_settings.py
+# No changes needed - your existing file is correct
 from .settings import *
 
 # Override settings for Render production
