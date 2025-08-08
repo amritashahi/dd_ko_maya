@@ -3,6 +3,8 @@ from pathlib import Path
 import environ
 import json
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -141,6 +143,8 @@ SECURE_HSTS_PRELOAD = False
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 if os.environ.get('IS_RENDER'):
     from .render_settings import *
 
+    
