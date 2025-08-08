@@ -18,9 +18,10 @@ class EssenceComboServiceInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'category', 'image_preview']
+    list_display = ['name', 'price', 'category', 'display_image']
     search_fields = ['name']
     list_filter = ['category']
+    readonly_fields = ('display_image',)
     
     def display_image(self, obj):
         if obj.image:
