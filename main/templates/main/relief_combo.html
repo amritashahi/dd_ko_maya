@@ -119,7 +119,7 @@
         <!-- Products Section -->
         {% for product in products %}
         <div class="product-card">
-            <img src="{% static product.image %}" class="product-img" alt="{{ product.name }}">
+            <img src="{% static 'products/'|add:product.image %}" class="product-img" alt="{{ product.name }}">
             <div>
                 <h5>{{ product.name }}</h5>
                 <p>Rs. {{ product.price }}</p>
