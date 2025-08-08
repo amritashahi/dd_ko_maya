@@ -141,4 +141,6 @@ SECURE_HSTS_PRELOAD = False
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+if os.environ.get('IS_RENDER'):
+    from .render_settings import *
 
